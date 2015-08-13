@@ -17,25 +17,32 @@ angular.module('typeahead-focus', [])
 
         //trigger the popup on 'click' because 'focus'
         //is also triggered after the item selection
-        element.bind('click', function () {
+        element.bind('focus', function () {
+          var secretEmptyKey = '[$empty$]';
 
           var viewValue = ngModel.$viewValue;
 
           //restore to null value so that the typeahead can detect a change
-          if (ngModel.$viewValue == ' ') {
+          if (ngModel.$viewValue == secretEmptyKey) {
             ngModel.$setViewValue(null);
           }
 
           //force trigger the popup
-          ngModel.$setViewValue(' ');
+          ngModel.$setViewValue(secretEmptyKey);
 
           //set the actual value in case there was already a value in the input
-          ngModel.$setViewValue(viewValue || ' ');
+          ngModel.$setViewValue(viewValue || secretEmptyKey);
+        });
+
+        scope.$watch(function(){
+          return ngModel.$viewValue;
+        }, function(newVal){
+          ngModel.$setViewValue(newVal || secretEmptyKey);
         });
 
         //compare function that treats the empty space as a match
         scope.$emptyOrMatch = function (actual, expected) {
-          if (expected == ' ') {
+          if (expected == secretEmptyKey) {
             return true;
           }
           return actual.toLowerCase().indexOf(expected.toLowerCase()) > -1;
