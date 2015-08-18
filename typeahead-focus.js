@@ -45,7 +45,7 @@ angular.module('typeahead-focus', [])
           if (expected === emptyKeyForAllList) {
             return true;
           }
-          return actual.toLowerCase().indexOf(expected.toLowerCase()) > -1;
+          return actual && actual.toLowerCase().indexOf(expected.toLowerCase()) > -1;
         };
       }
     };
